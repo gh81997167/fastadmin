@@ -306,7 +306,7 @@ if (!function_exists('var_export_format')) {
     /**
      * 正则转换旧的var_export转换的array字符串格式并保持成php文档格式
      * 使用最新的中括号[]数组格式，为了方便后期插件增加项目不用按顺序写
-     *
+     * 需要修改 vendor\karsonzhang\fastadmin-addons\src\common.php   $config_content = var_export_format(var_export($array, TRUE));
      * @method var_export_format
      *
      * @param  string            $string [var_export数组转换的字符串]
