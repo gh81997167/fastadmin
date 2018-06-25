@@ -1,4 +1,4 @@
-FastAdmin是一款基于ThinkPHP5+Bootstrap的极速后台开发框架。
+SwiftAdmin是一款基于ThinkPHP5+Bootstrap的极速后台开发框架，fork自FastAdmin。
 ===============
 
 
@@ -64,6 +64,7 @@ Gitee: https://gitee.com/karson/fastadmin
 ## **特别鸣谢**
 
 感谢以下的项目,排名不分先后
+FastAdmin https://www.fastadmin.net/
 
 ThinkPHP：http://www.thinkphp.cn
 
