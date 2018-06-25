@@ -300,3 +300,26 @@ if (!function_exists('var_export_short')) {
     }
 
 }
+
+if (!function_exists('var_export_format')) {
+
+    /**
+     * 正则转换旧的var_export转换的array字符串格式并保持成php文档格式
+     * 使用最新的中括号[]数组格式，为了方便后期插件增加项目不用按顺序写
+     *
+     * @method var_export_format
+     *
+     * @param  string            $string [var_export数组转换的字符串]
+     *
+     * @return [type]            [返回转换后的新数组格式]
+     */
+    function var_export_format($string = 'array()')
+    {
+        // $config_content = str_replace(['array (', '),'], ['[', '],'], $config_content);
+        $string = substr($string, 0, strlen($string) - 1);
+        $string = preg_replace(['/ \d+ => \n /', '/array \(/', '/\),/', '/\d+ => /'], ['', '[', '],', ''], $string, -1 , $count);
+        $addon_config_content = "<?php\n\n/**\n* 插件配置文件\n*/\n\n" . "return " . $string . "];\n";
+        return $addon_config_content;
+    }
+
+}
