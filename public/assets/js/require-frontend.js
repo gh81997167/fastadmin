@@ -43,7 +43,7 @@ require.config({
         'plupload': '../libs/plupload/js/plupload.min',
         'toastr': '../libs/toastr/toastr',
         'jstree': '../libs/jstree/dist/jstree.min',
-        'layer': '../libs/layer/dist/layer',
+        'layer': '../libs/fastadmin-layer/dist/layer',
         'cookie': '../libs/jquery.cookie/jquery.cookie',
         'cxselect': '../libs/fastadmin-cxselect/js/jquery.cxselect',
         'template': '../libs/art-template/dist/template-native',
@@ -110,7 +110,7 @@ require.config({
             deps: ['../libs/plupload/js/moxie.min'],
             exports: "plupload"
         },
-//        'layer': ['css!../libs/layer/dist/theme/default/layer.css'],
+//        'layer': ['css!../libs/fastadmin-layer/dist/theme/default/layer.css'],
 //        'validator-core': ['css!../libs/nice-validator/dist/jquery.validator.css'],
         'validator-lang': ['validator-core'],
 //        'selectpage': ['css!../libs/fastadmin-selectpage/selectpage.css'],

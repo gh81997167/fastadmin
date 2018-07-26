@@ -178,14 +178,15 @@
             if (obj.size() == 0)
                 return true;
             var vObjCol = ColumnsForSearch[i];
+            var process = !that.options.searchFormTemplate && vObjCol && typeof vObjCol.process == 'function' ? vObjCol.process : null;
             if (obj.size() > 1) {
                 if (/BETWEEN$/.test(sym)) {
                     var value_begin = $.trim($("[name='" + name + "']:first", that.$commonsearch).val()),
                         value_end = $.trim($("[name='" + name + "']:last", that.$commonsearch).val());
                     if (value_begin.length || value_end.length) {
-                        if (typeof vObjCol.process === 'function') {
-                            value_begin = vObjCol.process(value_begin, 'begin');
-                            value_end = vObjCol.process(value_end, 'end');
+                        if (process) {
+                            value_begin = process(value_begin, 'begin');
+                            value_end = process(value_end, 'end');
                         }
                         value = value_begin + ',' + value_end;
                     } else {
@@ -197,10 +198,10 @@
                     }
                 } else {
                     value = $("[name='" + name + "']:checked", that.$commonsearch).val();
-                    value = (vObjCol && typeof vObjCol.process === 'function') ? vObjCol.process(value) : value;
+                    value = process ? process(value) : value;
                 }
             } else {
-                value = (vObjCol && typeof vObjCol.process === 'function') ? vObjCol.process(obj.val()) : obj.val();
+                value = process ? process(obj.val()) : obj.val();
             }
             if (removeempty && (value == '' || value == null || ($.isArray(value) && value.length == 0)) && !sym.match(/null/i)) {
                 return true;
@@ -326,7 +327,6 @@
             if (obj.size() > 0) {
                 var value = $(this).data("value");
                 if (obj.is("select")) {
-                    console.log($("option[value='" + value + "']", obj));
                     $("option[value='" + value + "']", obj).prop("selected", true);
                 } else if (obj.size() > 1) {
                     $("form [name='" + $(this).data("field") + "'][value='" + value + "']", that.$commonsearch).prop("checked", true);

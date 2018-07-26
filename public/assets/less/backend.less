@@ -3,13 +3,13 @@
 @import (reference) "fastadmin/mixins.less";
 @import (reference) "fastadmin/variables.less";
 @import "lesshat.less";
-@import url("../css/bootstrap.min.css");
-@import url("../css/fastadmin.min.css");
+@import url("../css/bootstrap.css");
+@import url("../css/fastadmin.css");
 @import url("../css/skins/skin-green.css");
 @import url("../css/iconfont.css");
 @import url("../libs/font-awesome/css/font-awesome.min.css");
 @import url("../libs/toastr/toastr.min.css");
-@import url("../libs/layer/dist/theme/default/layer.css");
+@import url("../libs/fastadmin-layer/dist/theme/default/layer.css");
 @import url("../libs/bootstrap-table/dist/bootstrap-table.min.css");
 @import url("../libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css");
 @import url("../libs/bootstrap-daterangepicker/daterangepicker.css");
@@ -134,11 +134,6 @@ html.ios-fix, html.ios-fix body {
   padding: 10px;
 }
 
-/* 包裹在layer外层 */
-.layer-footer {
-  display: none;
-}
-
 table.table-template {
   overflow: hidden;
 }
@@ -206,6 +201,9 @@ table.table-template {
 .is-dialog {
   #main {
     background: #fff;
+  }
+  .layer-footer {
+    display: none;
   }
 }
 
@@ -556,7 +554,7 @@ form.form-horizontal .control-label {
     margin-top: 0;
   }
   .treeview-menu > li > a {
-    font-size:inherit;
+    font-size: inherit;
   }
 }
 
@@ -964,12 +962,18 @@ table.table-nowrap {
 
 .layui-layer-fast-msg {
   min-width: 100px;
-  border-radius: 2px;
-  background-color: rgba(0, 0, 0, .6);
-  color: #fff;
+}
+
+.layui-layer-fast-tab {
+  .layui-layer-title {
+    .layui-this {
+      color:#333;
+    }
+  }
   .layui-layer-content {
-    padding: 12px 25px;
-    text-align: center;
+    .layui-layer-tabmain {
+      margin:0;padding:0;
+    }
   }
 }
 
@@ -1115,4 +1119,15 @@ table.table-nowrap {
 
 .wipecache li a {
   color: #444444 !important;
+}
+
+/*修正开关关闭下的颜色值*/
+.btn-switcher {
+  &.disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+  .text-gray {
+    color: #d2d6de !important;
+  }
 }
