@@ -88,11 +88,12 @@ class Api extends Command
         );
 
         foreach ($files as $name => $file) {
-            if (!$file->isDir()) {
+            if (!$file->isDir() && $file->getExtension() == 'php') {
                 $filePath = $file->getRealPath();
                 $classes[] = $this->get_class_from_file($filePath);
             }
         }
+        $classes = array_unique(array_filter($classes));
 
         $config = [
             'title'       => $title,
