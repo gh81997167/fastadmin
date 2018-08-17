@@ -244,7 +244,7 @@ trait Backend
                         $this->error(__('No rows were updated'));
                     }
                 } else {
-                    $this->error(__('You have no permission'));
+                    $this->error(__('You need to set the multi property in class'));
                 }
             }
         }
