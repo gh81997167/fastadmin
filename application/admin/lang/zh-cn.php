@@ -129,6 +129,7 @@ return [
     'Are you sure you want to delete this item?'            => '确定删除此项?',
     'Are you sure you want to delete or turncate?'          => '确定删除或清空?',
     'You have no permission'                                => '你没有权限访问',
+    'You need to set the multi property in class'           => '你需要给控制器设置 $multi 属性, 才能使用此功能',
     'Please enter your username'                            => '请输入你的用户名',
     'Please enter your password'                            => '请输入你的密码',
     'Please login first'                                    => '请登录后操作',
