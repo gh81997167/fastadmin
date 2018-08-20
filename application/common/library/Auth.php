@@ -413,7 +413,7 @@ class Auth
      */
     public function getUserinfo()
     {
-        $data = $this->_user->toArray();
+        $data = $this->_user ? $this->_user->toArray() : [];
         $allowFields = $this->getAllowFields();
         $userinfo = array_intersect_key($data, array_flip($allowFields));
         $userinfo = array_merge($userinfo, Token::get($this->_token));
