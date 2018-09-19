@@ -195,7 +195,9 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 }
                 //如果未设备成功的回调,设定了自动刷新的情况下自动进行刷新
                 if (!success && typeof options.tableId !== 'undefined' && typeof options.refresh !== 'undefined' && options.refresh) {
-                    $("#" + options.tableId).bootstrapTable('refresh');
+                    success = function () {
+                        $("#" + options.tableId).bootstrapTable('refresh');
+                    }
                 }
                 if (typeof options.confirm !== 'undefined') {
                     Layer.confirm(options.confirm, function (index) {
@@ -214,16 +216,6 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
             //修复不在iframe时layer-footer隐藏的问题
             if ($(".layer-footer").size() > 0 && self === top) {
                 $(".layer-footer").show();
-            }
-            //优化在多个弹窗下点击不能切换的操作体验
-            if (Fast.api.query("dialog") == "1" && self != top && self.frameElement && self.frameElement.tagName == "IFRAME") {
-                $(window).on('click', function () {
-                    var layero = self.frameElement.parentNode.parentElement;
-                    if (parent.Layer.zIndex != parseInt(parent.window.$(layero).css("z-index"))) {
-                        parent.window.$(layero).trigger("mousedown");
-                        parent.Layer.zIndex = parseInt(parent.window.$(layero).css("z-index"));
-                    }
-                });
             }
             //tooltip和popover
             if (!('ontouchstart' in document.documentElement)) {
