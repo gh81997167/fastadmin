@@ -104,7 +104,6 @@ if (!function_exists('build_toolbar')) {
         $controller = str_replace('.', '/', strtolower(think\Request::instance()->controller()));
         $btns = $btns ? $btns : ['refresh', 'add', 'edit', 'del', 'import'];
         $btns = is_array($btns) ? $btns : explode(',', $btns);
-        $btns = array_map("trim", $btns);
         $index = array_search('delete', $btns);
         if ($index !== FALSE) {
             $btns[$index] = 'del';

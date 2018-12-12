@@ -2,6 +2,7 @@
 
 namespace app\admin\model;
 
+use app\common\model\MoneyLog;
 use think\Model;
 
 class User extends Model
@@ -21,6 +22,11 @@ class User extends Model
         'jointime_text'
     ];
 
+    public function getOriginData()
+    {
+        return $this->origin;
+    }
+
     protected static function init()
     {
         self::beforeUpdate(function ($row) {
@@ -34,6 +40,15 @@ class User extends Model
                 } else {
                     unset($row->password);
                 }
+            }
+        });
+
+
+        self::beforeUpdate(function ($row) {
+            $changedata = $row->getChangedData();
+            if (isset($changedata['money'])) {
+                $origin = $row->getOriginData();
+                MoneyLog::create(['user_id' => $row['id'], 'money' => $changedata['money'] - $origin['money'], 'before' => $origin['money'], 'after' => $changedata['money'], 'memo' => '管理员变更金额']);
             }
         });
     }

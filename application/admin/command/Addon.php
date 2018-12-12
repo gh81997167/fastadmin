@@ -84,13 +84,13 @@ class Addon extends Command
                 }
 
                 $data = [
-                    'name' => $name,
-                    'addon' => $name,
-                    'addonClassName' => ucfirst($name),
-                    'addonInstallMenu' => $createMenu ? "\$menu = " . var_export_short($createMenu, "\t") . ";\n\tMenu::create(\$menu);" : '',
+                    'name'               => $name,
+                    'addon'              => $name,
+                    'addonClassName'     => ucfirst($name),
+                    'addonInstallMenu'   => $createMenu ? "\$menu = " . var_export_short($createMenu, "\t") . ";\n\tMenu::create(\$menu);" : '',
                     'addonUninstallMenu' => $menuList ? 'Menu::delete("' . $name . '");' : '',
-                    'addonEnableMenu' => $menuList ? 'Menu::enable("' . $name . '");' : '',
-                    'addonDisableMenu' => $menuList ? 'Menu::disable("' . $name . '");' : '',
+                    'addonEnableMenu'    => $menuList ? 'Menu::enable("' . $name . '");' : '',
+                    'addonDisableMenu'   => $menuList ? 'Menu::disable("' . $name . '");' : '',
                 ];
                 $this->writeToFile("addon", $data, $addonDir . ucfirst($name) . '.php');
                 $this->writeToFile("config", $data, $addonDir . 'config.php');
@@ -251,7 +251,7 @@ class Addon extends Command
                 $output->info("Package Successed!");
                 break;
 
-            default:
+            default :
                 break;
         }
     }
@@ -264,9 +264,9 @@ class Addon extends Command
     protected function getCreateMenu($menu)
     {
         $result = [];
-        foreach ($menu as $k => &$v) {
+        foreach ($menu as $k => & $v) {
             $arr = [
-                'name' => $v['name'],
+                'name'  => $v['name'],
                 'title' => $v['title'],
             ];
             if ($v['icon'] != 'fa fa-circle-o') {

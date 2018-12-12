@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\controller\general;
 
 use app\common\controller\Backend;
@@ -14,16 +15,19 @@ use think\Exception;
  */
 class Config extends Backend
 {
+
     /**
      * @var \app\common\model\Config
      */
     protected $model = null;
     protected $noNeedRight = ['check'];
+
     public function _initialize()
     {
         parent::_initialize();
         $this->model = model('Config');
     }
+
     /**
      * 查看
      */
@@ -36,6 +40,7 @@ class Config extends Backend
             $siteList[$k]['title'] = $v;
             $siteList[$k]['list'] = [];
         }
+
         foreach ($this->model->all() as $k => $v) {
             if (!isset($siteList[$v['group']])) {
                 continue;
@@ -45,7 +50,7 @@ class Config extends Backend
             if (in_array($value['type'], ['select', 'selects', 'checkbox', 'radio'])) {
                 $value['value'] = explode(',', $value['value']);
             }
-            $value['content'] = json_decode($value['content'], true);
+            $value['content'] = json_decode($value['content'], TRUE);
             $siteList[$v['group']]['list'][] = $value;
         }
         $index = 0;
@@ -58,6 +63,7 @@ class Config extends Backend
         $this->view->assign('groupList', ConfigModel::getGroupList());
         return $this->view->fetch();
     }
+
     /**
      * 添加
      */
@@ -94,11 +100,12 @@ class Config extends Backend
         }
         return $this->view->fetch();
     }
+
     /**
      * 编辑
      * @param null $ids
      */
-    public function edit($ids = null)
+    public function edit($ids = NULL)
     {
         if ($this->request->isPost()) {
             $row = $this->request->post("row/a");
@@ -127,6 +134,7 @@ class Config extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
     }
+
     public function del($ids = "")
     {
         $name = $this->request->request('name');
@@ -143,6 +151,7 @@ class Config extends Backend
             $this->error(__('Invalid parameters'));
         }
     }
+
     /**
      * 刷新配置文件
      */
@@ -150,17 +159,19 @@ class Config extends Backend
     {
         $config = [];
         foreach ($this->model->all() as $k => $v) {
+
             $value = $v->toArray();
             if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
                 $value['value'] = explode(',', $value['value']);
             }
             if ($value['type'] == 'array') {
-                $value['value'] = (array) json_decode($value['value'], true);
+                $value['value'] = (array)json_decode($value['value'], TRUE);
             }
             $config[$value['name']] = $value['value'];
         }
         file_put_contents(APP_PATH . 'extra' . DS . 'site.php', '<?php' . "\n\nreturn " . var_export($config, true) . ";");
     }
+
     /**
      * 检测配置项是否存在
      * @internal
@@ -169,6 +180,7 @@ class Config extends Backend
     {
         $params = $this->request->post("row/a");
         if ($params) {
+
             $config = $this->model->get($params);
             if (!$config) {
                 return $this->success();
@@ -179,6 +191,7 @@ class Config extends Backend
             return $this->error(__('Invalid parameters'));
         }
     }
+
     /**
      * 发送测试邮件
      * @internal
@@ -200,4 +213,5 @@ class Config extends Backend
             $this->error($email->getError());
         }
     }
+
 }
