@@ -58,7 +58,7 @@ require.config({
         'bootstrap-table': {
             deps: [
                 'bootstrap',
-//                'css!../libs/bootstrap-table/dist/bootstrap-table.min.css'
+                //                'css!../libs/bootstrap-table/dist/bootstrap-table.min.css'
             ],
             exports: '$.fn.bootstrapTable'
         },
@@ -100,20 +100,20 @@ require.config({
         },
         'bootstrap-datetimepicker': [
             'moment/locale/zh-cn',
-//            'css!../libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+            //            'css!../libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
         ],
-//        'bootstrap-select': ['css!../libs/bootstrap-select/dist/css/bootstrap-select.min.css',],
+        //        'bootstrap-select': ['css!../libs/bootstrap-select/dist/css/bootstrap-select.min.css',],
         'bootstrap-select-lang': ['bootstrap-select'],
-//        'toastr': ['css!../libs/toastr/toastr.min.css'],
+        //        'toastr': ['css!../libs/toastr/toastr.min.css'],
         'jstree': ['css!../libs/jstree/dist/themes/default/style.css',],
         'plupload': {
             deps: ['../libs/plupload/js/moxie.min'],
             exports: "plupload"
         },
-//        'layer': ['css!../libs/fastadmin-layer/dist/theme/default/layer.css'],
-//        'validator-core': ['css!../libs/nice-validator/dist/jquery.validator.css'],
+        //        'layer': ['css!../libs/fastadmin-layer/dist/theme/default/layer.css'],
+        //        'validator-core': ['css!../libs/nice-validator/dist/jquery.validator.css'],
         'validator-lang': ['validator-core'],
-//        'selectpage': ['css!../libs/fastadmin-selectpage/selectpage.css'],
+        //        'selectpage': ['css!../libs/fastadmin-selectpage/selectpage.css'],
         'citypicker': ['citypicker-data', 'css!../libs/fastadmin-citypicker/dist/css/city-picker.css']
     },
     baseUrl: requirejs.s.contexts._.config.config.site.cdnurl + '/assets/js/', //资源基础路径
@@ -136,7 +136,7 @@ require(['jquery', 'bootstrap'], function ($, undefined) {
     paths['lang'] = Config.moduleurl + '/ajax/lang?callback=define&controllername=' + Config.controllername;
     // 避免目录冲突
     paths['backend/'] = 'backend/';
-    require.config({paths: paths});
+    require.config({ paths: paths });
 
     // 初始化
     $(function () {

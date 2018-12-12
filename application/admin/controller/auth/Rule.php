@@ -100,7 +100,9 @@ class Rule extends Backend
             $this->error(__('No Results were found'));
         if ($this->request->isPost())
         {
+            $params_tmp = $this->request->post("row/a", []);
             $params = $this->request->post("row/a", [], 'strip_tags');
+            $params['remark'] = $params_tmp['remark'];
             if ($params)
             {
                 if (!$params['ismenu'] && !$params['pid'])

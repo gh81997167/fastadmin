@@ -4,6 +4,7 @@ use app\common\model\Category;
 use fast\Form;
 use fast\Tree;
 use think\Db;
+use fast\Http;
 
 if (!function_exists('build_select')) {
 
@@ -159,5 +160,65 @@ if (!function_exists('build_heading')) {
             $result = '<div class="panel-heading">' . $result . '</div>';
         }
         return $result;
+    }
+}
+
+if (!function_exists('sfjf_sql_query')) {
+
+    /**
+     * 通过接口查询盛丰金服的数据库 只允许查
+     *
+     * @param [type] $sql
+     * @param string $queryAct
+     * @param string $where
+     * @param string $limit
+     * @param string $order
+     * @return void
+     */
+    function sfjf_sql_query($sql , $queryAct = 'getRow', $where = '', $limit = '', $sort_order = '')
+    {
+
+        $where && $sql = $sql . $where;
+        $sort_order && $sql = $sql . $sort_order;
+        $limit && $sql = $sql . $limit;
+        //判断是否包含 ^ 如果包含不需要 
+        // print_r($sql);
+        // exit;
+        // echo '<br/>';
+        // $result = Db::query($sql);
+        // $sql = Db::getLastSql();
+        // echo $sql;
+        // echo ($sql);exit;
+        $url = "https://www.51sfjf.com/member.php?ctl=test&act=sql";
+        $params = [
+            'secret' => '4w4g6556544g',
+            'queryAct' => $queryAct,
+            'sql' => base64_encode(urlencode($sql))
+        ];
+        $options = [];
+        $result = Http::post($url, $params, $options);
+        $result = substr($result, 3);//带BOM头 需要处理掉  
+        $result = json_decode($result, true);
+        return $result;
+        // return json($result);
+    }
+
+}
+
+
+if (!function_exists('close_tag')) {
+    /**
+     * 给字符串加个括号，方便导出的时候识别为字符串，不然数字太长会变成科学计数法或者超过15个数字会出现末尾0的问题
+     *
+     * @param [type] $str
+     * @return void
+     */
+    function close_tag($str = '', $delimiter = '')
+    {
+        if ($delimiter) {
+            return "$delimiter" . $str . "$delimiter";
+        } else {
+            return "'" . $str . "'";
+        }
     }
 }

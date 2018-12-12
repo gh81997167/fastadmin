@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'name' => 'FastAdmin',
+  'name' => '盛丰金服',
   'beian' => '',
   'cdnurl' => '',
   'version' => '1.0.1',

@@ -11,6 +11,8 @@
 // +----------------------------------------------------------------------
 use think\Env;
 
+$database2 = require_once('database2.php');
+
 return [
     // +----------------------------------------------------------------------
     // | 应用设置
@@ -18,7 +20,7 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => Env::get('app.debug', false),
+    'app_debug'              => Env::get('app.debug', true),
     // 应用Trace
     'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态
@@ -137,7 +139,7 @@ return [
     'view_replace_str'       => [
         '__PUBLIC__' => '',
         '__ROOT__'   => '',
-        '__CDN__'    => '',
+        '__CDN__'    => 'http://cdn.51sfjf.com',
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -276,4 +278,5 @@ return [
         //API接口地址
         'api_url'             => 'https://api.fastadmin.net',
     ],
+    'database2' => $database2,
 ];
