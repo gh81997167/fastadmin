@@ -1,5 +1,4 @@
 <?php
-
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
@@ -18,14 +17,11 @@ use think\Exception;
  */
 class Addon extends Backend
 {
-
     protected $model = null;
-
     public function _initialize()
     {
         parent::_initialize();
     }
-
     /**
      * 查看
      */
@@ -39,11 +35,10 @@ class Addon extends Backend
         $this->assignconfig(['addons' => $addons]);
         return $this->view->fetch();
     }
-
     /**
      * 配置
      */
-    public function config($ids = NULL)
+    public function config($ids = null)
     {
         $name = $this->request->get("name");
         if (!$name) {
@@ -54,15 +49,17 @@ class Addon extends Backend
         }
         $info = get_addon_info($name);
         $config = get_addon_fullconfig($name);
-        if (!$info)
+        if (!$info) {
             $this->error(__('No Results were found'));
+        }
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
                 foreach ($config as $k => &$v) {
                     if (isset($params[$v['name']])) {
                         if ($v['type'] == 'array') {
-                            $params[$v['name']] = is_array($params[$v['name']]) ? $params[$v['name']] : (array)json_decode($params[$v['name']], true);
+                            $params[$v['name']] = is_array($params[$v['name']]) ? $params[$v['name']] : (array) json_decode($params[$v['name']], true);
                             $value = $params[$v['name']];
                         } else {
                             $value = is_array($params[$v['name']]) ? implode(',', $params[$v['name']]) : $params[$v['name']];
@@ -81,19 +78,25 @@ class Addon extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("addon", ['info' => $info, 'config' => $config]);
+        $tips = [];
+        foreach ($config as $index => &$item) {
+            if ($item['name'] == '__tips__') {
+                $tips = $item;
+                unset($config[$index]);
+            }
+        }
+        $this->view->assign("addon", ['info' => $info, 'config' => $config, 'tips' => $tips]);
         $configFile = ADDON_PATH . $name . DS . 'config.html';
         $viewFile = is_file($configFile) ? $configFile : '';
         return $this->view->fetch($viewFile);
     }
-
     /**
      * 安装
      */
     public function install()
     {
         $name = $this->request->post("name");
-        $force = (int)$this->request->post("force");
+        $force = (int) $this->request->post("force");
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
@@ -103,10 +106,10 @@ class Addon extends Backend
             $version = $this->request->post("version");
             $faversion = $this->request->post("faversion");
             $extend = [
-                'uid'       => $uid,
-                'token'     => $token,
-                'version'   => $version,
-                'faversion' => $faversion
+                'uid' => $uid,
+                'token' => $token,
+                'version' => $version,
+                'faversion' => $faversion,
             ];
             Service::install($name, $force, $extend);
             $info = get_addon_info($name);
@@ -119,14 +122,13 @@ class Addon extends Backend
             $this->error(__($e->getMessage()), $e->getCode());
         }
     }
-
     /**
      * 卸载
      */
     public function uninstall()
     {
         $name = $this->request->post("name");
-        $force = (int)$this->request->post("force");
+        $force = (int) $this->request->post("force");
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
@@ -139,7 +141,6 @@ class Addon extends Backend
             $this->error(__($e->getMessage()));
         }
     }
-
     /**
      * 禁用启用
      */
@@ -147,7 +148,7 @@ class Addon extends Backend
     {
         $name = $this->request->post("name");
         $action = $this->request->post("action");
-        $force = (int)$this->request->post("force");
+        $force = (int) $this->request->post("force");
         if (!$name) {
             $this->error(__('Parameter %s can not be empty', 'name'));
         }
@@ -163,14 +164,12 @@ class Addon extends Backend
             $this->error(__($e->getMessage()));
         }
     }
-
     /**
      * 本地上传
      */
     public function local()
     {
         Config::set('default_return_type', 'json');
-
         $file = $this->request->file('file');
         $addonTmpDir = RUNTIME_PATH . 'addons' . DS;
         if (!is_dir($addonTmpDir)) {
@@ -188,18 +187,15 @@ class Addon extends Backend
                 if (!is_file($infoFile)) {
                     throw new Exception(__('Addon info file was not found'));
                 }
-
                 $config = Config::parse($infoFile, '', $tmpName);
                 $name = isset($config['name']) ? $config['name'] : '';
                 if (!$name) {
                     throw new Exception(__('Addon info file data incorrect'));
                 }
-
                 $newAddonDir = ADDON_PATH . $name . DS;
                 if (is_dir($newAddonDir)) {
                     throw new Exception(__('Addon already exists'));
                 }
-
                 //重命名插件文件夹
                 rename($tmpAddonDir, $newAddonDir);
                 try {
@@ -209,17 +205,14 @@ class Addon extends Backend
                         $info['state'] = 0;
                         set_addon_info($name, $info);
                     }
-
                     //执行插件的安装方法
                     $class = get_addon_class($name);
                     if (class_exists($class)) {
                         $addon = new $class();
                         $addon->install();
                     }
-
                     //导入SQL
                     Service::importsql($name);
-
                     $info['config'] = get_addon_config($name) ? 1 : 0;
                     $this->success(__('Offline installed tips'), null, ['addon' => $info]);
                 } catch (Exception $e) {
@@ -236,7 +229,6 @@ class Addon extends Backend
             $this->error(__($file->getError()));
         }
     }
-
     /**
      * 更新插件
      */
@@ -252,10 +244,10 @@ class Addon extends Backend
             $version = $this->request->post("version");
             $faversion = $this->request->post("faversion");
             $extend = [
-                'uid'       => $uid,
-                'token'     => $token,
-                'version'   => $version,
-                'faversion' => $faversion
+                'uid' => $uid,
+                'token' => $token,
+                'version' => $version,
+                'faversion' => $faversion,
             ];
             //调用更新的方法
             Service::upgrade($name, $extend);
@@ -267,14 +259,13 @@ class Addon extends Backend
             $this->error(__($e->getMessage()));
         }
     }
-
     /**
      * 已装插件
      */
     public function downloaded()
     {
-        $offset = (int)$this->request->get("offset");
-        $limit = (int)$this->request->get("limit");
+        $offset = (int) $this->request->get("offset");
+        $limit = (int) $this->request->get("limit");
         $filter = $this->request->get("filter");
         $search = $this->request->get("search");
         $search = htmlspecialchars(strip_tags($search));
@@ -283,7 +274,7 @@ class Addon extends Backend
             $onlineaddons = [];
             $result = Http::sendRequest(config('fastadmin.api_url') . '/addon/index');
             if ($result['ret']) {
-                $json = json_decode($result['msg'], TRUE);
+                $json = json_decode($result['msg'], true);
                 $rows = isset($json['rows']) ? $json['rows'] : [];
                 foreach ($rows as $index => $row) {
                     $onlineaddons[$row['name']] = $row;
@@ -291,12 +282,13 @@ class Addon extends Backend
             }
             Cache::set("onlineaddons", $onlineaddons, 600);
         }
-        $filter = (array)json_decode($filter, true);
+        $filter = (array) json_decode($filter, true);
         $addons = get_addon_list();
         $list = [];
         foreach ($addons as $k => $v) {
-            if ($search && stripos($v['name'], $search) === FALSE && stripos($v['intro'], $search) === FALSE)
+            if ($search && stripos($v['name'], $search) === false && stripos($v['intro'], $search) === false) {
                 continue;
+            }
 
             if (isset($onlineaddons[$v['name']])) {
                 $v = array_merge($v, $onlineaddons[$v['name']]);
@@ -323,9 +315,7 @@ class Addon extends Backend
             $list = array_slice($list, $offset, $limit);
         }
         $result = array("total" => $total, "rows" => $list);
-
         $callback = $this->request->get('callback') ? "jsonp" : "json";
         return $callback($result);
     }
-
 }

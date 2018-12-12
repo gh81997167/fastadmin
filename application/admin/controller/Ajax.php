@@ -1,5 +1,4 @@
 <?php
-
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
@@ -16,19 +15,15 @@ use think\Lang;
  */
 class Ajax extends Backend
 {
-
     protected $noNeedLogin = ['lang'];
     protected $noNeedRight = ['*'];
     protected $layout = '';
-
     public function _initialize()
     {
         parent::_initialize();
-
         //设置过滤方法
         $this->request->filter(['strip_tags', 'htmlspecialchars']);
     }
-
     /**
      * 加载语言包
      */
@@ -40,7 +35,6 @@ class Ajax extends Backend
         $this->loadlang($controllername);
         return jsonp(Lang::get(), 200, [], ['json_encode_param' => JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE]);
     }
-
     /**
      * 上传文件
      */
@@ -51,23 +45,18 @@ class Ajax extends Backend
         if (empty($file)) {
             $this->error(__('No file upload or server upload limit exceeded'));
         }
-
         //判断是否已经存在附件
         $sha1 = $file->hash();
-
         $upload = Config::get('upload');
-
         preg_match('/(\d+)(\w+)/', $upload['maxsize'], $matches);
         $type = strtolower($matches[2]);
         $typeDict = ['b' => 0, 'k' => 1, 'kb' => 1, 'm' => 2, 'mb' => 2, 'gb' => 3, 'g' => 3];
-        $size = (int)$upload['maxsize'] * pow(1024, isset($typeDict[$type]) ? $typeDict[$type] : 0);
+        $size = (int) $upload['maxsize'] * pow(1024, isset($typeDict[$type]) ? $typeDict[$type] : 0);
         $fileInfo = $file->getInfo();
         $suffix = strtolower(pathinfo($fileInfo['name'], PATHINFO_EXTENSION));
         $suffix = $suffix ? $suffix : 'file';
-
         $mimetypeArr = explode(',', strtolower($upload['mimetype']));
         $typeArr = explode('/', $fileInfo['type']);
-
         //验证文件后缀
         if ($upload['mimetype'] !== '*' &&
             (
@@ -78,22 +67,21 @@ class Ajax extends Backend
             $this->error(__('Uploaded file format is limited'));
         }
         $replaceArr = [
-            '{year}'     => date("Y"),
-            '{mon}'      => date("m"),
-            '{day}'      => date("d"),
-            '{hour}'     => date("H"),
-            '{min}'      => date("i"),
-            '{sec}'      => date("s"),
-            '{random}'   => Random::alnum(16),
+            '{year}' => date("Y"),
+            '{mon}' => date("m"),
+            '{day}' => date("d"),
+            '{hour}' => date("H"),
+            '{min}' => date("i"),
+            '{sec}' => date("s"),
+            '{random}' => Random::alnum(16),
             '{random32}' => Random::alnum(32),
             '{filename}' => $suffix ? substr($fileInfo['name'], 0, strripos($fileInfo['name'], '.')) : $fileInfo['name'],
-            '{suffix}'   => $suffix,
-            '{.suffix}'  => $suffix ? '.' . $suffix : '',
-            '{filemd5}'  => md5_file($fileInfo['tmp_name']),
+            '{suffix}' => $suffix,
+            '{.suffix}' => $suffix ? '.' . $suffix : '',
+            '{filemd5}' => md5_file($fileInfo['tmp_name']),
         ];
         $savekey = $upload['savekey'];
         $savekey = str_replace(array_keys($replaceArr), array_values($replaceArr), $savekey);
-
         $uploadDir = substr($savekey, 0, strripos($savekey, '/') + 1);
         $fileName = substr($savekey, strripos($savekey, '/') + 1);
         //
@@ -106,32 +94,31 @@ class Ajax extends Backend
                 $imageheight = isset($imgInfo[1]) ? $imgInfo[1] : $imageheight;
             }
             $params = array(
-                'admin_id'    => (int)$this->auth->id,
-                'user_id'     => 0,
-                'filesize'    => $fileInfo['size'],
-                'imagewidth'  => $imagewidth,
+                'admin_id' => (int) $this->auth->id,
+                'user_id' => 0,
+                'filesize' => $fileInfo['size'],
+                'imagewidth' => $imagewidth,
                 'imageheight' => $imageheight,
-                'imagetype'   => $suffix,
+                'imagetype' => $suffix,
                 'imageframes' => 0,
-                'mimetype'    => $fileInfo['type'],
-                'url'         => $uploadDir . $splInfo->getSaveName(),
-                'uploadtime'  => time(),
-                'storage'     => 'local',
-                'sha1'        => $sha1,
+                'mimetype' => $fileInfo['type'],
+                'url' => $uploadDir . $splInfo->getSaveName(),
+                'uploadtime' => time(),
+                'storage' => 'local',
+                'sha1' => $sha1,
             );
             $attachment = model("attachment");
             $attachment->data(array_filter($params));
             $attachment->save();
             \think\Hook::listen("upload_after", $attachment);
             $this->success(__('Upload successful'), null, [
-                'url' => $uploadDir . $splInfo->getSaveName()
+                'url' => $uploadDir . $splInfo->getSaveName(),
             ]);
         } else {
             // 上传失败获取错误信息
             $this->error($file->getError());
         }
     }
-
     /**
      * 通用排序
      */
@@ -146,7 +133,7 @@ class Ajax extends Backend
         //操作的数据表
         $table = $this->request->post("table");
         //排序的方式
-        $orderway = $this->request->post("orderway", 'strtolower');
+        $orderway = $this->request->post("orderway", "", 'strtolower');
         $orderway = $orderway == 'asc' ? 'ASC' : 'DESC';
         $sour = $weighdata = [];
         $ids = explode(',', $ids);
@@ -154,7 +141,6 @@ class Ajax extends Backend
         $pid = $this->request->post("pid");
         //限制更新的字段
         $field = in_array($field, ['weigh']) ? $field : 'weigh';
-
         // 如果设定了pid的值,此时只匹配满足条件的ID,其它忽略
         if ($pid !== '') {
             $hasids = [];
@@ -164,14 +150,13 @@ class Ajax extends Backend
             }
             $ids = array_values(array_intersect($ids, $hasids));
         }
-
         $list = Db::name($table)->field("$prikey,$field")->where($prikey, 'in', $ids)->order($field, $orderway)->select();
         foreach ($list as $k => $v) {
             $sour[] = $v[$prikey];
             $weighdata[$v[$prikey]] = $v[$field];
         }
         $position = array_search($changeid, $ids);
-        $desc_id = $sour[$position];    //移动到目标的ID值,取出所处改变前位置的值
+        $desc_id = $sour[$position]; //移动到目标的ID值,取出所处改变前位置的值
         $sour_id = $changeid;
         $weighids = array();
         $temp = array_values(array_diff_assoc($ids, $sour));
@@ -190,7 +175,6 @@ class Ajax extends Backend
         }
         $this->success();
     }
-
     /**
      * 清空系统缓存
      */
@@ -198,25 +182,30 @@ class Ajax extends Backend
     {
         $type = $this->request->request("type");
         switch ($type) {
-            case 'content' || 'all':
+            case 'all':
+            case 'content':
                 rmdirs(CACHE_PATH, false);
                 Cache::clear();
-                if ($type == 'content')
+                if ($type == 'content') {
                     break;
-            case 'template' || 'all':
-                rmdirs(TEMP_PATH, false);
-                if ($type == 'template')
-                    break;
-            case 'addons' || 'all':
-                Service::refresh();
-                if ($type == 'addons')
-                    break;
-        }
+                }
 
+            case 'template':
+                rmdirs(TEMP_PATH, false);
+                if ($type == 'template') {
+                    break;
+                }
+
+            case 'addons':
+                Service::refresh();
+                if ($type == 'addons') {
+                    break;
+                }
+
+        }
         \think\Hook::listen("wipecache_after");
         $this->success();
     }
-
     /**
      * 读取分类数据,联动列表
      */
@@ -233,12 +222,10 @@ class Ajax extends Backend
             if ($pid) {
                 $where['pid'] = $pid;
             }
-
             $categorylist = Db::name('category')->where($where)->field('id as value,name')->order('weigh desc,id desc')->select();
         }
         $this->success('', null, $categorylist);
     }
-
     /**
      * 读取省市区数据,联动列表
      */
@@ -263,5 +250,4 @@ class Ajax extends Backend
         }
         $this->success('', null, $provincelist);
     }
-
 }
