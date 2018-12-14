@@ -1,7 +1,8 @@
 name = {%name%}
-title = 插件名称{%name%}
-intro = FastAdmin插件
-author = yourname
-website = https://www.fastadmin.net
-version = 1.0.0
-state = 1
+title = {%title%}
+intro = {%intro%}
+author = {%author%}
+website = {%website_url%}
+version = {%version%}
+state = {%state%}
+url = {%addon_url%}
