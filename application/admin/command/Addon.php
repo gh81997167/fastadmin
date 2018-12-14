@@ -71,6 +71,7 @@ class Addon extends Command
                 mkdir($addonDir, 0755, true);
                 mkdir($addonDir . DS . 'controller', 0755, true);
                 $menuList = \app\common\library\Menu::export($name);
+
                 $createMenu = $this->getCreateMenu($menuList);
                 $prefix = Config::get('database.prefix');
                 $createTableSql = '';
@@ -87,11 +88,12 @@ class Addon extends Command
                     'name'               => $name,
                     'addon'              => $name,
                     'addonClassName'     => ucfirst($name),
-                    'addonInstallMenu'   => $createMenu ? "\$menu = " . var_export_short($createMenu, "\t") . ";\n\tMenu::create(\$menu);" : '',
+                    'addonInstallMenu'   => $createMenu ? "\$menu = " . var_export_format($createMenu, "\t") . ";\n\tMenu::create(\$menu);" : '',
                     'addonUninstallMenu' => $menuList ? 'Menu::delete("' . $name . '");' : '',
                     'addonEnableMenu'    => $menuList ? 'Menu::enable("' . $name . '");' : '',
                     'addonDisableMenu'   => $menuList ? 'Menu::disable("' . $name . '");' : '',
                 ];
+                dump($data);exit;
                 $this->writeToFile("addon", $data, $addonDir . ucfirst($name) . '.php');
                 $this->writeToFile("config", $data, $addonDir . 'config.php');
                 $this->writeToFile("info", $data, $addonDir . 'info.ini');
