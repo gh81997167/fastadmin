@@ -189,9 +189,9 @@ if (!function_exists('sfjf_sql_query')) {
         // $sql = Db::getLastSql();
         // echo $sql;
         // echo ($sql);exit;
-        $url = "https://www.51sfjf.com/member.php?ctl=test&act=sql";
+        $url = get_addon_config('statement')['select_api'];
         $params = [
-            'secret' => '4w4g6556544g',
+            'secret' => get_addon_config('statement')['select_secret'],
             'queryAct' => $queryAct,
             'sql' => base64_encode(urlencode($sql))
         ];
@@ -199,7 +199,7 @@ if (!function_exists('sfjf_sql_query')) {
         $result = Http::post($url, $params, $options);
         $result = substr($result, 3);//带BOM头 需要处理掉  
         $result = json_decode($result, true);
-        return $result;
+        return $result ? $result : ['data'=>[]];
         // return json($result);
     }
 
