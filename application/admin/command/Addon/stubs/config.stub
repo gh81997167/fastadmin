@@ -3,9 +3,9 @@
 return [
     [
         //配置唯一标识
-        'name'    => 'usernmae',
+        'name'    => 'item1',
         //显示的标题
-        'title'   => '用户名',
+        'title'   => '配置项1',
         //类型
         'type'    => 'string',
         //数据字典
@@ -25,8 +25,8 @@ return [
         'extend'  => ''
     ],
     [
-        'name'    => 'password',
-        'title'   => '密码',
+        'name'    => 'item2',
+        'title'   => '配置项2',
         'type'    => 'string',
         'content' => [
         ],
