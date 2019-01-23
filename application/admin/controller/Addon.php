@@ -72,7 +72,7 @@ class Addon extends Backend
                 }
                 try {
                     //更新配置文件
-                    set_addon_fullconfig($name, $config);
+                    set_addon_fullconfig_format($name, $config);
                     Service::refresh();
                     $this->success();
                 } catch (Exception $e) {

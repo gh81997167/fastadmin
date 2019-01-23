@@ -323,3 +323,29 @@ if (!function_exists('var_export_format')) {
     }
 
 }
+
+if (!function_exists('set_addon_fullconfig_format')) {
+    /**
+     * 写入配置文件，以新数组格式 [] 代替 array() ，便于手动新增插件配置项，或者可以做成自动新增的方式
+     *
+     * @param string $name 插件名
+     * @param array $array
+     * @return boolean
+     * @throws Exception
+     */
+    function set_addon_fullconfig_format($name, $array)
+    {
+        $file = ADDON_PATH . $name . DIRECTORY_SEPARATOR . 'config.php';
+        if (!is_really_writable($file)) {
+            throw new Exception("文件没有写入权限");
+        }
+        if ($handle = fopen($file, 'w')) {
+            fwrite($handle, "<?php\n\n" . "return " . var_export_format($array, TRUE) . ";\n");
+            fclose($handle);
+        } else {
+            throw new Exception("文件没有写入权限");
+        }
+        return true;
+    }
+
+}
