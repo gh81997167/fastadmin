@@ -336,11 +336,11 @@ if (!function_exists('set_addon_fullconfig_format')) {
     function set_addon_fullconfig_format($name, $array)
     {
         $file = ADDON_PATH . $name . DIRECTORY_SEPARATOR . 'config.php';
-        if (!is_really_writable($file)) {
+        if (!is_really_writable($file)) { 
             throw new Exception("文件没有写入权限");
         }
         if ($handle = fopen($file, 'w')) {
-            fwrite($handle, "<?php\n\n" . "return " . var_export_format($array, TRUE) . ";\n");
+            fwrite($handle, var_export_format(var_export($array, TRUE)));
             fclose($handle);
         } else {
             throw new Exception("文件没有写入权限");
