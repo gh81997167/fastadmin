@@ -521,11 +521,11 @@ class Backend extends Controller
                 $value[1] = trim($value[1]);
                 //判断是否区间查找
                 if(strpos($value[1], 'BETWEEN') !== false){
-                    if(strpos(strtolower($value[1]), 'time') !== false){
-                        if(!ctype_digit($value[2][0]) || $value[2][0] > 2147483647 ){
+                    if(strpos(strtolower($value[0]), 'time') !== false){
+                        if(!ctype_digit($value[2][0]) ){
                             $value[2][0] = strtotime($value[2][0]);
                         } 
-                        if(!ctype_digit($value[2][1]) || $value[2][1] > 2147483647 ){
+                        if(!ctype_digit($value[2][1]) ){
                             $value[2][1] = strtotime($value[2][1]);
                         } 
                     }
