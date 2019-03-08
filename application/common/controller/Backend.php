@@ -506,6 +506,12 @@ class Backend extends Controller
      * @param boolean $relationSearch 是否关联查询
      * @return array
      */
+    /**
+     * 生成查询所需要的条件,排序方式
+     * @param mixed $searchfields 快速查询的字段
+     * @param boolean $relationSearch 是否关联查询
+     * @return array
+     */
     protected function buildWhereString($arr = [])
     {
         $where = "";
@@ -515,7 +521,15 @@ class Backend extends Controller
                 $value[1] = trim($value[1]);
                 //判断是否区间查找
                 if(strpos($value[1], 'BETWEEN') !== false){
-                    $where_section = str_replace('time', '', " `{$value[0]}` {$value[1]} '{$value[2][0]}' AND '{$value[2][1]}' ");
+                    if(strpos(strtolower($value[1]), 'time') !== false){
+                        if(!ctype_digit($value[2][0]) || $value[2][0] > 2147483647 ){
+                            $value[2][0] = strtotime($value[2][0]);
+                        } 
+                        if(!ctype_digit($value[2][1]) || $value[2][1] > 2147483647 ){
+                            $value[2][1] = strtotime($value[2][1]);
+                        } 
+                    }
+                    $where_section = "`{$value[0]}`" . str_replace('time', '', " {$value[1]} '{$value[2][0]}' AND '{$value[2][1]}' ");
                 }else{
                     $where_section = strpos($value[0], '^') === false ? " `{$value[0]}` {$value[1]} '{$value[2]}' " : " " . str_replace('^', '', $value[0]) . " {$value[1]} '{$value[2]}' ";
                 }
